@@ -2,6 +2,18 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
 
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    return "Hello, World!"
+
+#print(torch.cuda.is_available())
+#x = torch.rand(5, 3)
+#print(x)
+
 #Mean Pooling - Take attention mask into account for correct averaging
 def mean_pooling(model_output, attention_mask):
     token_embeddings = model_output[0] #First element of model_output contains all token embeddings
