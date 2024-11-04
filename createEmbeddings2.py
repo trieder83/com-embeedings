@@ -1,6 +1,12 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
+import nltk
+# used to build only - homedir nltk_data
+# nltk.download('punkt')
+nltk.download('punkt_tab')
+from nltk.tokenize import sent_tokenize
+
 
 from flask import Flask
 from flask import Flask, jsonify, request
@@ -14,12 +20,20 @@ def hello_world():
 
 @app.route('/embedding',methods=['GET', 'POST'])
 def get_embedding():
+    embeddings = []
     data = request.json
-    embedding = createEmbedding(data["text"])
+    if not isinstance(data['text'], str):
+        raise TypeError("Input should be a string")
+    for sentence in sent_tokenize(data['text']):
+        embedding = createEmbedding(sentence)
+        #print(sentence)
+        #print(get_embedding)
+        embeddings.append(embedding.numpy().tolist() )
     #return jsonify(embedding)
-    print(embedding)
+    #print(embeddings)
     #return embedding
-    return jsonify( embedding.numpy().tolist() )
+    #return jsonify( embeddings.numpy().tolist() )
+    return jsonify( embeddings )
 
 #print(torch.cuda.is_available())
 #x = torch.rand(5, 3)
@@ -32,16 +46,13 @@ def mean_pooling(model_output, attention_mask):
     return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
 
-# Sentences we want sentence embeddings for
-sentences = ['This is an example sentence', 'Each sentence is converted']
-
 # Load model from HuggingFace Hub
 tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
 model = AutoModel.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
 
 def createEmbedding(sentences):
   # Tokenize sentences
-  encoded_input = tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
+  encoded_input = tokenizer(sentences, padding=True, truncation=True, return_tensors='pt' )
 
   # Compute token embeddings
   with torch.no_grad():
