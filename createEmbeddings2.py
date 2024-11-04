@@ -2,6 +2,7 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
 import nltk
+import os
 # used to build only - homedir nltk_data
 # nltk.download('punkt')
 nltk.download('punkt_tab')
@@ -46,6 +47,8 @@ def mean_pooling(model_output, attention_mask):
     return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
 
+# disable cuda for testing
+# os.environ["CUDA_VISIBLE_DEVICES"]=""
 # Load model from HuggingFace Hub
 tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
 model = AutoModel.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
