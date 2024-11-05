@@ -48,10 +48,11 @@ def mean_pooling(model_output, attention_mask):
 
 
 # disable cuda for testing
-# os.environ["CUDA_VISIBLE_DEVICES"]=""
+#device = torch.device("cpu")
+device = torch.device("cuda")
 # Load model from HuggingFace Hub
 tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
-model = AutoModel.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
+model = AutoModel.from_pretrained('sentence-transformers/all-MiniLM-L6-v2', device)
 
 def createEmbedding(sentences):
   # Tokenize sentences
