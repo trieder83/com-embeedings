@@ -5,7 +5,8 @@ import torch
 app = Flask(__name__)
 
 # Load the mBART model and tokenizer
-model_name = "facebook/mbart-large-50"
+#model_name = "facebook/mbart-large-50"
+model_name = "facebook/mbart-large-50-many-to-many-mmt"
 tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
 model = MBartForConditionalGeneration.from_pretrained(model_name)
 
@@ -14,9 +15,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)  # Move model to GPU if available
 
 # Set the default language code for your input (e.g., 'en_XX' for English)
-source_language = "de_XX"  # Adjust based on input language
-#target_language = "de_DE"
-target_language = "de_XX"
+source_language = "en_XX"  # Adjust based on input language
 
 # Summarize text using mBART model
 def summarize_text(text):
@@ -31,7 +30,8 @@ def summarize_text(text):
         min_length=20,
         length_penalty=2.0,
         num_beams=4,
-        early_stopping=True
+        early_stopping=True,
+        decoder_start_token_id=tokenizer.lang_code_to_id["de_DE"],  # German language code
     )
     summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary
