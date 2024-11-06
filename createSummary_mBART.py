@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Load the mBART model and tokenizer
 #model_name = "facebook/mbart-large-50"
+#model_name = "facebook/mbart-large-50-many-to-one-mmt"
 model_name = "facebook/mbart-large-50-many-to-many-mmt"
 tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
 model = MBartForConditionalGeneration.from_pretrained(model_name)
@@ -29,9 +30,15 @@ def summarize_text(text):
         max_length=80,
         min_length=20,
         length_penalty=2.0,
-        num_beams=4,
+        #num_beams=4,
+        num_beams=8,
         early_stopping=True,
-        decoder_start_token_id=tokenizer.lang_code_to_id["de_DE"],  # German language code
+        #decoder_start_token_id=tokenizer.lang_code_to_id["de_DE"],  # German language code
+        forced_bos_token_id=tokenizer.lang_code_to_id["de_DE"],
+        no_repeat_ngram_size=2,  # Prevent repeating n-grams (e.g., 2-grams, 3-grams)
+        top_p=0.9,  # Nucleus sampling to allow diverse but high-probability tokens
+        temperature=0.7,  # Lower temperature to make the generation less random and avoid repetition
+        do_sample=False  # Disable sampling to make output deterministic
     )
     summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary
