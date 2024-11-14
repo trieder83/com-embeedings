@@ -14,10 +14,13 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def hello_world():
     return "Hello, World!"
+
+@app.route('/healthcheck')
+def health_check():
+    return 'This node is healthy'
 
 @app.route('/embedding',methods=['GET', 'POST'])
 def get_embedding():
@@ -71,3 +74,5 @@ def createEmbedding(sentences):
 
 #print("Sentence embeddings:")
 #print(sentence_embeddings)
+
+app.run( host='0.0.0.0', port=8888 )

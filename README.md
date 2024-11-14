@@ -4,6 +4,7 @@ Model Test
 
 ## run flask 
 `flask --app createEmbeddings2 run`
+# --host=0.0.0.0
 `curl http://127.0.0.1:5000/embedding -H "Content-Type: application/json" --request POST  --data '{"text":"xyz"}'`
 
 ## local model store
