@@ -1,9 +1,8 @@
 # FROM python:3
 # FROM python:3.8-slim
-FROM pytorch/pytorch
+#FROM pytorch/pytorch
+FROM nvidia/cuda:12.1.1-runtime-ubuntu20.04
 
-	
-WORKDIR /usr/src/app
 
 # Set environment variables.
 ENV PORT 8888
@@ -13,17 +12,25 @@ ENV HOST 0.0.0.0
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY requirements.txt bootstrap.sh ./
 
-USER 1001:1001
+RUN apt-get update && \
+    apt-get install -y python3-pip python3-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir /app && \
+    mkdir /.local && \
+    chown 1001:1001 /app /.local
+
+#COPY requirements.txt ./
+
+#USER 1001:1001
+WORKDIR /app
+COPY . .
 
 #RUN conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
 RUN pip install --no-cache-dir -r requirements.txt && \
-    python3 -c 'from sentence_transformers import SentenceTransformer; SentenceTransformer("all-MiniLM-L6-v2", cache_folder="./app/artefacts")' && \
-    python3 ./createEmbeddings2.py
+    python3 -c 'from sentence_transformers import SentenceTransformer; SentenceTransformer("all-MiniLM-L6-v2", cache_folder="./app/artefacts")'
+RUN python3 ./createEmbeddings2.py
 #    huggingface-cli login --token xxx && \
-
-COPY . .
 
 #CMD [ "python", "./createEmbeddings2.py" ]
 #CMD [ flask, --app, createEmbeddings2, "run"]

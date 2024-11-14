@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 #from transformers import LlamaForCausalLM, LlamaTokenizer
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from airllm import AutoModel
 import torch
 from torch.cuda.amp import autocast
 
@@ -18,6 +19,7 @@ app = Flask(__name__)
 
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
 model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
+#model = AutoModel.from_pretrained("mlx-community/Llama-3.2-3B-Instruct-4bit")
 
 
 #tokenizer = LlamaTokenizer.from_pretrained(model_name)

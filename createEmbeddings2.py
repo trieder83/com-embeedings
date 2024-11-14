@@ -24,14 +24,19 @@ def health_check():
 
 @app.route('/embedding',methods=['GET', 'POST'])
 def get_embedding():
+    split = false
     embeddings = []
     data = request.json
     if not isinstance(data['text'], str):
         raise TypeError("Input should be a string")
-    for sentence in sent_tokenize(data['text']):
-        embedding = createEmbedding(sentence)
-        #print(sentence)
-        #print(get_embedding)
+    if split:
+        for sentence in sent_tokenize(data['text']):
+            embedding = createEmbedding(sentence)
+            #print(sentence)
+            #print(get_embedding)
+           )
+    else:
+        embedding = createEmbedding(data['text'])
         embeddings.append(embedding.numpy().tolist() )
     #return jsonify(embedding)
     #print(embeddings)
@@ -75,4 +80,4 @@ def createEmbedding(sentences):
 #print("Sentence embeddings:")
 #print(sentence_embeddings)
 
-app.run( host='0.0.0.0', port=8888 )
+#app.run( host='0.0.0.0', port=8888 )
