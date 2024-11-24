@@ -1,7 +1,8 @@
 # FROM python:3
 # FROM python:3.8-slim
 #FROM pytorch/pytorch
-FROM nvidia/cuda:12.1.1-runtime-ubuntu20.04
+#FROM nvidia/cuda:12.1.1-runtime-ubuntu20.04
+FROM nvidia/cuda:12.6.2-base-ubuntu22.04
 
 
 # Set environment variables.

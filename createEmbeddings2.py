@@ -55,10 +55,15 @@ def mean_pooling(model_output, attention_mask):
     return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
 
+
 # disable cuda for testing
-#device = torch.device("cpu")
+#if os.environ['CPU'] == "CPU":
+#  device = torch.device("cpu")
+#else:
 device = torch.device("cuda")
+
 # Load model from HuggingFace Hub
+# distiluse-base-multilingual-cased-v2 / 512 dimensions
 tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
 model = AutoModel.from_pretrained('sentence-transformers/all-MiniLM-L6-v2', device)
 
