@@ -34,7 +34,7 @@ def get_embedding():
             embedding = createEmbedding(sentence)
             #print(sentence)
             #print(get_embedding)
-           )
+            embeddings.append(embedding.numpy().tolist() )
     else:
         embedding = createEmbedding(data['text'])
         embeddings.append(embedding.numpy().tolist() )
