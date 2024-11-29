@@ -1,13 +1,13 @@
 import asyncio
 import chromadb
-from chromadb.utils import embedding_functions
+#from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer("all-MiniLM-L6-v2")  # beerere multilantuage
 #model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
 
 # Initialize default embedding function
-default_ef = embedding_functions.DefaultEmbeddingFunction()
+#default_ef = embedding_functions.DefaultEmbeddingFunction()
 
 # Initialize a sentence transformer embedding function
 #embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
