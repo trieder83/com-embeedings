@@ -24,7 +24,20 @@ def health_check():
     return 'This node is healthy'
 
 
-model = SentenceTransformer("all-MiniLM-L6-v2")  # beerere multilantuage
+#model = SentenceTransformer("all-MiniLM-L6-v2")  # beerere multilantuage
+#model.save("./data","all-MiniLM-L6-v2-local")
+
+#Load the model from the local path
+model = SentenceTransformer("/data",:q
+                            )
+
+# pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension())
+#dense_model = models.Dense(
+#    in_features=pooling_model.get_sentence_embedding_dimension(),
+#    out_features=368,
+#    activation_function=nn.Tanh(),
+#)
+
 
 @app.route('/embedding',methods=['GET', 'POST'])
 def get_embedding():
