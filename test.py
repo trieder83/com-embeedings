@@ -17,4 +17,5 @@ if __name__ == "__main__":
     text = "I am the vector test"
     result = get_embedding(text)
     if result:
-        print("Embedding result:", result)
+        #print("Embedding result:", result)
+        print(f"Embedding 1 of {len(result['embeddings'])}: {result['embeddings'][0]}")
