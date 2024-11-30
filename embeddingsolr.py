@@ -1,5 +1,4 @@
 import asyncio
-import chromadb
 #from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
 from flask import Flask
@@ -47,7 +46,7 @@ def get_embedding():
     #print(embeddings)
     #return embedding
     #return jsonify( embeddings.numpy().tolist() )
-    return jsonify( embeddings )
+    return jsonify( {"embeddings": embeddings })
 
 def createEmbedding(sentences):
   # Tokenize sentences

@@ -28,8 +28,9 @@ WORKDIR /app
 COPY . .
 
 #RUN conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
-RUN pip install --no-cache-dir -r requirements.txt && \
-    python3 -c 'from sentence_transformers import SentenceTransformer; SentenceTransformer("all-MiniLM-L6-v2", cache_folder="./app/artefacts")'
+RUN pip install torch --index-url https://download.pytorch.org/whl/cpu && \
+  pip install --no-cache-dir -r requirements.txt && \
+  python3 -c 'from sentence_transformers import SentenceTransformer; SentenceTransformer("all-MiniLM-L6-v2", cache_folder="./app/artefacts")'
 #RUN python3 ./createEmbeddings2.py
 RUN python3 ./embeddingsolr.py
 #    huggingface-cli login --token xxx && \

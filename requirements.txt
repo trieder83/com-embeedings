@@ -1,5 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
 nest-asyncio==1.6.0
 sentence-transformers==3.2.1
 transformers==4.45.1
 Flask==3.0.3
 gunicorn==23.0.0
+langchain
+langchain-core
+langchain-text-splitters
