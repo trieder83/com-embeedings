@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 import torch
+from langdetect import detect
 
 app = Flask(__name__)
 
@@ -14,6 +15,7 @@ model = MBartForConditionalGeneration.from_pretrained(model_name)
 # Check if CUDA is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)  # Move model to GPU if available
+#model.to("cpu")  # Move model to CPU
 
 # Set the default language code for your input (e.g., 'en_XX' for English)
 source_language = "en_XX"  # Adjust based on input language
@@ -56,6 +58,38 @@ def summarize():
     # Generate summary
     summary = summarize_text(text)
     return jsonify({"summary": summary})
+
+# Define a route to tranlation the text
+@app.route('/translate', methods=['POST'])
+def translate_text():
+    data = request.json
+    text = data.get("text", "")
+    target_language = data.get("tl", "en_XX")
+    source_language = data.get("sl", None)
+
+    # Load the model and tokenizer
+
+    # Detect source language if not provided
+    if not source_language:
+        detected_lang = detect(text)
+        source_language = detected_lang.replace('-', '_') + '_XX'
+        print(f"Detected source language: {detected_lang}")
+
+    # Set tokenizer source and target language
+    tokenizer.src_lang = source_language
+    tokenizer.tgt_lang = target_language
+
+    # Tokenize the input text and move tensors to the same device as the model
+    inputs = tokenizer(text, return_tensors="pt")
+    inputs = {key: value.to(device) for key, value in inputs.items()}
+
+    # Generate translation
+    translated_tokens = model.generate(**inputs, forced_bos_token_id=tokenizer.lang_code_to_id[target_language])
+    translated_text = tokenizer.decode(translated_tokens[0], skip_special_tokens=True)
+
+    return jsonify({"translation": translated_text})
+
+
 
 # Run the Flask app
 if __name__ == '__main__':
