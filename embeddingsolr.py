@@ -8,8 +8,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # Define the chunking parameters
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=300,  # Max tokens per chunk
-    chunk_overlap=50,  # Overlap to ensure continuity between chunks
+    chunk_size=int(os.environ.get("CHUNK_SIZE", 100)),  # Max tokens per chunk
+    chunk_overlap=int(os.environ.get("CHUNK_OVERLAP", 3)),  # Overlap to ensure continuity between chunks
     separators=["\n\n", "\n", " ", ""]  # Break on paragraphs, sentences, words
 )
 
@@ -28,8 +28,7 @@ def health_check():
 #model.save("./data","all-MiniLM-L6-v2-local")
 
 #Load the model from the local path
-model = SentenceTransformer("/data",:q
-                            )
+model = SentenceTransformer("/data")
 
 # pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension())
 #dense_model = models.Dense(
