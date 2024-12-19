@@ -37,6 +37,12 @@ model = SentenceTransformer("/data")
 #    activation_function=nn.Tanh(),
 #)
 
+# save to model to /data
+@app.route('/save', methods=['GET'])
+def savemodel():
+  model.save("./data","all-MiniLM-L6-v2-local")
+  return "Success", 200
+
 
 @app.route('/embedding',methods=['GET', 'POST'])
 def get_embedding():

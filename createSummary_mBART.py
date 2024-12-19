@@ -45,6 +45,12 @@ def summarize_text(text):
     summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary
 
+# save to model to /data
+@app.route('/save', methods=['GET'])
+def savemodel():
+  model.save_pretrained("./data")
+  return "Success", 200
+
 # Define a route to summarize the text
 @app.route('/summarize', methods=['POST'])
 def summarize():
