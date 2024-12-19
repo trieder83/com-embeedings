@@ -8,3 +8,4 @@ gunicorn==23.0.0
 langchain
 langchain-core
 langchain-text-splitters
+tarfile

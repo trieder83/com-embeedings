@@ -6,11 +6,16 @@ from langdetect import detect
 app = Flask(__name__)
 
 # Load the mBART model and tokenizer
-#model_name = "facebook/mbart-large-50"
+model_name = "facebook/mbart-large-50"
 #model_name = "facebook/mbart-large-50-many-to-one-mmt"
-model_name = "facebook/mbart-large-50-many-to-many-mmt"
+#model_name = "facebook/mbart-large-50-many-to-many-mmt"
 tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
 model = MBartForConditionalGeneration.from_pretrained(model_name)
+
+#local load
+#local_path = "/data"
+#tokenizer = MBart50TokenizerFast.from_pretrained(local_path)
+#model = MBartForConditionalGeneration.from_pretrained(local_path)
 
 # Check if CUDA is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,7 +53,7 @@ def summarize_text(text):
 # save to model to /data
 @app.route('/save', methods=['GET'])
 def savemodel():
-  model.save_pretrained("./data")
+  model.save_pretrained("/data")
   return "Success", 200
 
 # Define a route to summarize the text

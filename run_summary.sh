@@ -9,4 +9,4 @@ if [ ! -z $WINDIR ]; then
   DOCKER="winpty podman"
 fi
 
-$DOCKER run -p 8888:8888 -v $volume:/data -it localhost/trieder83/com-summary:gpu-0.1  flask --app createSummary_mBART.py run --host 0.0.0.0 --port 8888 
+$DOCKER run -p 8888:8888 -v $volume:/data -it localhost/trieder83/com-summary:gpu-0.2  flask --app createSummary_mBART.py run --host 0.0.0.0 --port 8888 
