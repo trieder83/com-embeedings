@@ -12,6 +12,7 @@ ENV HOST 0.0.0.0
 # Set environment variables.
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONIOENCODING=utf-8
 
 
 #RUN apt-get update && \

@@ -2,18 +2,22 @@ from flask import Flask, request, jsonify
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 from langdetect import detect
+import logging
 
 app = Flask(__name__)
 
+# debug
+#logging.basicConfig(level=logging.DEBUG)
+
 # Load the nllb model and tokenizer
 model_name="facebook/nllb-200-distilled-600M"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+#tokenizer = AutoTokenizer.from_pretrained(model_name)
+#model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
 #local load
-#local_path = "/data"
-#tokenizer = AutoTokenizer.from_pretrained(local_path)
-#model = AutoModelForSeq2SeqLM.from_pretrained(local_path)
+local_path = "/data/"
+tokenizer = AutoTokenizer.from_pretrained(local_path, token=True)
+model = AutoModelForSeq2SeqLM.from_pretrained(local_path, token=True)
 
 # Check if CUDA is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -22,7 +26,7 @@ model.to(device)  # Move model to GPU if available
 
 # Set the default language code for your input (e.g., 'en_XX' for English)
 
-# Mapping of detected languages to NLLB codes
+# Mapping of detected languages to NLLB codes / BCP-47
 lang_code_map = {
     "en": "eng_Latn",  # English
     "fr": "fra_Latn",  # French
@@ -97,6 +101,7 @@ lang_code_map = {
     "ve": "ven_Latn",  # Venda
     "nr": "nbl_Latn",  # Southern Ndebele
     "ss": "ssw_Latn",  # Swazi
+    "hy": "hye_Armn", # Armeenian
 }
 
 def detect_language(text):
@@ -119,7 +124,8 @@ def summarize_text(text):
 # save to model to /data
 @app.route('/save', methods=['GET'])
 def savemodel():
-  model.save_pretrained("/data")
+  tokenizer.save_pretrained(local_path)
+  model.save_pretrained(local_path)
   return "Success", 200
 
 # Define a route to summarize the text
@@ -150,18 +156,23 @@ def translate_text():
     Returns:
         str: Translated text
     """
-    data = request.json
+    #data = request.json
+    data = request.get_json(force=True)
     text = data.get("text", "")
-    target_lang = data.get("tl", "deu")
+    target_lang = data.get("tl", "deu_Latn")
     source_lang = data.get("sl", None)
 
     # Detect source language
     if source_lang is None:
         source_lang = detect_language(text)
+        print(f"Auto detected source language: {source_lang}")
+    else:
+        # if BCP-47 code
+        if len(source_lang) == 2:
+           source_lang = lang_code_map.get(source_lang, None)
+        print(f"Specified source language: {source_lang}")
     if not source_lang:
         return "Source language not supported."
-
-    print(f"Detected source language: {source_lang}")
 
     # Ensure target language is valid
     #if f"<{target_lang}>" not in tokenizer.lang_tokens:
@@ -178,11 +189,14 @@ def translate_text():
         return_tensors="pt",
         max_length=512,
         truncation=True,
+        padding=False,
     )
+    #print(f"input token count: {len(inputs)}")
 
     # Set the forced_bos_token_id for the target language
     print(f"target language: <{target_lang}>")
-    forced_bos_token_id = tokenizer.convert_tokens_to_ids(f"<{target_lang}>")
+    #forced_bos_token_id = tokenizer.convert_tokens_to_ids(f"<{target_lang}>")
+    forced_bos_token_id = tokenizer.convert_tokens_to_ids(f"{target_lang}")
 
     # Generate translation
     translated_tokens = model.generate(
@@ -191,7 +205,8 @@ def translate_text():
     )
 
     # Decode the output tokens
-    translated_text = tokenizer.decode(translated_tokens[0], skip_special_tokens=True)
+    #translated_text = tokenizer.decode(translated_tokens[0], skip_special_tokens=True)
+    translated_text = tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)[0]
 
     return jsonify({"translation": translated_text})
 
