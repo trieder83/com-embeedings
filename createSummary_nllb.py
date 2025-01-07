@@ -128,6 +128,10 @@ def savemodel():
   model.save_pretrained(local_path)
   return "Success", 200
 
+@app.route('/healthcheck')
+def health_check():
+    return 'This node is healthy'
+
 # Define a route to summarize the text
 @app.route('/summarize', methods=['POST'])
 def summarize():

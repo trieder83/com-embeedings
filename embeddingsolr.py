@@ -24,7 +24,6 @@ def hello_world():
 def health_check():
     return 'This node is healthy'
 
-
 #model = SentenceTransformer("all-MiniLM-L6-v2")  # beerere multilantuage
 #model.save("./data","all-MiniLM-L6-v2-local")
 

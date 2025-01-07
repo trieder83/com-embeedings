@@ -26,7 +26,7 @@ RUN    mkdir /app && \
 
 #USER 1001:1001
 WORKDIR /app
-COPY . .
+COPY requirements.txt .
 
 #RUN conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
 #RUN pip install torch --index-url https://download.pytorch.org/whl/cpu && \
@@ -35,6 +35,8 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 #RUN python3 ./createEmbeddings2.py
 #RUN python3 ./embeddingsolr.py
 #    huggingface-cli login --token xxx && \
+COPY --exclude=data* embeddingsolr .
+#COPY embeddingsolr.py .
 
 #CMD [ "python", "./createEmbeddings2.py" ]
 #CMD [ flask, --app, createEmbeddings2, "run"]

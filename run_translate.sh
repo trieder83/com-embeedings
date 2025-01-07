@@ -17,4 +17,4 @@ fi
 #$DOCKER run -p 8888:8888 -v $volume:/data -it localhost/trieder83/com-summary:gpu-0.2  flask --app createSummary_mBART.py run --host 0.0.0.0 --port 8888 
 #$DOCKER run -v $volume:/data -v $scriptvolume:/app -it localhost/trieder83/com-summary:gpu-0.2  sh -c "ls /data"
 #$DOCKER run -p 8888:8888 -v $volume:/data -v $scriptvolume:/app -it localhost/trieder83/com-summary:gpu-0.2  flask --app createSummary_nllb.py run --host 0.0.0.0 --port 8888 
-$DOCKER run --device nvidia.com/gpu=all -p 8888:8888 -v $volume:/data -v $scriptvolume:/app -it localhost/trieder83/com-transate:gpu-0.2  flask --app createSummary_nllb.py run --host 0.0.0.0 --port 8888 
+$DOCKER run --device nvidia.com/gpu=all --security-opt=label=disable -p 8888:8888 -v $volume:/data -v $scriptvolume:/app -it localhost/trieder83/com-transate:gpu-0.2  flask --app createSummary_nllb.py run --host 0.0.0.0 --port 8888 
