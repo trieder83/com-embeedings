@@ -34,3 +34,5 @@ fi
 
 # windows
 curl -X POST http://172.18.0.119:8888/translate -H 'Content-Type: application/json' --data '@test'
+
+curl -X POST http://localhost:8888/translate -H 'Content-Type: application/json' --data '@test'
