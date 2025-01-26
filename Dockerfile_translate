@@ -33,9 +33,9 @@ RUN pip install --no-cache-dir -r requirements_translate.txt
 #  python3 -c 'from sentence_transformers import SentenceTransformer; SentenceTransformer("all-MiniLM-L6-v2", cache_folder="./app/artefacts")'
 #RUN python3 ./createSummary_mBART.py
 #    huggingface-cli login --token xxx && \
-COPY --exclude=data* *.sh *.txt createSummary_nllb.py .
+COPY --exclude=data* *.sh *.txt translate_nllb.py .
 
 
 #CMD [ flask, --app,createSummary_mBART.py, "run"]
-CMD [ flask, --app,createSummary_nllb.py, "run"]
+CMD [ flask, --app,translate_nllb.py, "run"]
 #CMD [ ./"bootstrap.sh"]
